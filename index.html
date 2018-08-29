@@ -37,7 +37,7 @@
 					<h2>План</h2>
                                         <ol>
 						<li>Коротко об акторах Akka
-						<li>ActorRef[T] и адаптер; стратегии миграции
+						<li>Типизированный ActorRef; стратегии миграции
 						<li>ask-pattern
 						<li>Behavior - базовое устройство
 						<li>Mutable state
@@ -196,32 +196,54 @@ object Main extends App {
 				</section>
 
 				<section>
-					<h2>ActorRef[T] и адаптер; стратегии миграции</h2>
+					<h3>Типизированный ActorRef<br>стратегии миграции</h3>
+				</section>
+
+				<section>
+					Теперь у нас два ActorRef:
+					<ul>
+						<li>akka.actor.ActorRef
+						<li>akka.actor.typed.ActorRef[T]
+					</ul>
+					<p class="fragment">T - тип того, что можно отправить в актор
+				</section>
+
+				<section>
+					<p>Обычно T - sealed trait Protocol,<br> объявленный в companion object актора.
+				</section>
+
+				<section>
+					<p>Обычные и типизированные акторы работают вместе:
+					<pre><code class="scala">
+import akka.actor.typed.{ActorRef ⇒ TypedActorRef}
+import akka.actor.typed.scaladsl.adapter._
+					</code></pre>
+					<p class="fragment">адаптер конвертирует разные ActorRef друг в друга
+					<p class="fragment">adapter лучше импортировать точечно
+				</section>
+
+				<section>
+					<h3>ask-pattern</h3>
 					<p>TODO
 				</section>
 
 				<section>
-					<h2>ask-pattern</h2>
+					<h3>Behavior - базовое устройство</h3>
 					<p>TODO
 				</section>
 
 				<section>
-					<h2>Behavior - базовое устройство</h2>
+					<h3>Mutable state</h3>
 					<p>TODO
 				</section>
 
 				<section>
-					<h2>Mutable state</h2>
+					<h3>Stash</h3>
 					<p>TODO
 				</section>
 
 				<section>
-					<h2>Stash</h2>
-					<p>TODO
-				</section>
-
-				<section>
-					<h2>Таймеры</h2>
+					<h3>Таймеры</h3>
 					<p>TODO
 				</section>
 		</div>
