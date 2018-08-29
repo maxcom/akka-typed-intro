@@ -29,18 +29,25 @@
 			<!-- Any section element inside of this container is displayed as a slide -->
 			<div class="slides">
 				<section>
-					<h1>Akka Typed – типы для акторов Akka</h1>
+					<h2>Akka Typed – типы для акторов Akka</h2>
 					<p><small>Слайды: <a href="https://maxcom.github.io/akka-typed-intro/">https://maxcom.github.io/akka-typed-intro/</small></a>
 				</section>
 
 				<section>
 					<h2>План</h2>
                                         <ol>
+						<li>Коротко об акторах Akka
+						<li>ActorRef[T] и адаптер; стратегии миграции
+						<li>ask-pattern
+						<li>Behavior - базовое устройство
+						<li>Mutable state
+						<li>Stash
+						<li>Таймеры
 					</ol>
 				</section>
 
 				<section>
-					<h2>Akka и акторы</h2>
+					<h2>Коротко об акторах Akka</h2>
 				</section>
 
 				<section>
@@ -62,17 +69,6 @@
 				<section>
 					<p>Дальше будем говорить про реализацию модели
 					в библиотеке <a target="_blank" href="https://akka.io/">Akka</a>.
-				</section>
-
-				<section>
-					<p>Подключаем в проект: build.sbt
-
-					<pre><code class="scala">
-libraryDependencies += 
-  "com.typesafe.akka" %% "akka-actor" % "2.5.11"
-					</code></pre>
-
-					<p><small>в Play! зависимость уже и так есть</small>
 				</section>
 
 				<section>
@@ -104,7 +100,7 @@ libraryDependencies +=
 								<td>Запрос</td>
 								<td>counter.get()<br>⇒ Int</td>
 								<td>counter ? Get<br>
-								counter.ask(Get)<br>⇒ Future[Int]</td>
+								counter.ask(Get)<br>⇒ Future[Any] // Int</td>
 							</tr>
 						</thead>
 					</table>
@@ -170,12 +166,6 @@ object Main extends App {
 				</section>
 
 				<section>
-					<p>В Akka Typed идентификатор актора ActorRef[Protocol]
-
-					<p>(этот API пока еще experimental)
-				</section>
-
-				<section>
 					<p>Приватное состояние - не только переменные.
 
 					<p class="fragment">Актор может скрывать за собой внешние сущности:
@@ -203,6 +193,36 @@ object Main extends App {
 					</ul>
 
 					<p class="fragment">Изменяемые объекты посылать нельзя!
+				</section>
+
+				<section>
+					<h2>ActorRef[T] и адаптер; стратегии миграции</h2>
+					<p>TODO
+				</section>
+
+				<section>
+					<h2>ask-pattern</h2>
+					<p>TODO
+				</section>
+
+				<section>
+					<h2>Behavior - базовое устройство</h2>
+					<p>TODO
+				</section>
+
+				<section>
+					<h2>Mutable state</h2>
+					<p>TODO
+				</section>
+
+				<section>
+					<h2>Stash</h2>
+					<p>TODO
+				</section>
+
+				<section>
+					<h2>Таймеры</h2>
+					<p>TODO
 				</section>
 		</div>
 
