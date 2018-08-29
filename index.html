@@ -41,6 +41,7 @@
 						<li>ask-pattern
 						<li>Behavior - базовое устройство
 						<li>Mutable state
+						<li>Logging
 						<li>Stash
 						<li>Таймеры
 					</ol>
@@ -193,6 +194,7 @@ object Main extends App {
 					</ul>
 
 					<p class="fragment">Изменяемые объекты посылать нельзя!
+					<br><small>(но это не точно)</small>
 				</section>
 
 				<section>
@@ -220,6 +222,14 @@ import akka.actor.typed.scaladsl.adapter._
 					</code></pre>
 					<p class="fragment">адаптер конвертирует разные ActorRef друг в друга
 					<p class="fragment">adapter лучше импортировать точечно
+				</section>
+
+				<section>
+					<p>Стратегия миграции:
+					<ol>
+						<li>создаем протокол и мигрируем "клиентов"
+						<li>мигрируем актор
+					</ol>
 				</section>
 
 				<section>
@@ -292,11 +302,56 @@ object GetHostIdentities {
 
 				<section>
 					<h3>Behavior - базовое устройство</h3>
-					<p>TODO
+				</section>
+
+				<section>
+					<p>Behavior[T] - логика актора
+				</section>
+
+				<section>
+					<pre><code class="scala">
+def behavior(current: Int): Behavior[Protocol] = 
+  Behaviors.receiveMessage { // функция из Protocol в Behavior
+    case Incr(n) ⇒ 
+      behavior(current + n) // заменяет context.become
+    case Get(replyto) ⇒
+      replyto ! current
+      Behaviors.same
+  }
+					</code></pre>
+				</section>
+
+				<section>
+					<p>Есть такие варианты простого "receive"
+					<ul>
+						<li>receiveMessage: Protocol =&gt; Behavior
+						<li>receive: (Context, Protocol) =&gt; Behavior
+						<li>receiveMessagePartial - частичная версия receiveMessage
+						<li>receivePartial - частичная версия receive
+					</ul>
 				</section>
 
 				<section>
 					<h3>Mutable state</h3>
+					<p>Иногда нужен настоящий mutable state
+					<pre><code class="scala">def behavior: Behavior[Protocol] = Behaviors.setup { ctx ⇒
+  var current: Int = 0
+
+  // тут может быть инициализация
+
+  Behaviors.receiveMessage {
+    case Incr(n) ⇒
+      current += n
+      Behaviors.same
+    case Get(replyto) ⇒
+      replyto ! current
+      Behaviors.same
+  }
+}</code></pre>
+				</section>
+
+				<section>
+					<h3>Logging</h3>
 					<p>TODO
 				</section>
 
