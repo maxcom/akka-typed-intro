@@ -352,17 +352,86 @@ def behavior(current: Int): Behavior[Protocol] =
 
 				<section>
 					<h3>Logging</h3>
-					<p>TODO
+					<pre><code class="scala">
+Behaviors.setup { ctx ⇒
+  ctx.log("Hello, world!")
+
+  ...
+}
+
+</code></pre>
+				</section>
+
+				<section>
+					<p>Но нужно учесть:
+					<ul>
+						<li class="fragment">log потокобезопасный, а ctx.log - нет. Нужно сохранять в val
+						<li class="fragment">в slf4j оно попадает со странным именем класса
+					</ul>
 				</section>
 
 				<section>
 					<h3>Stash</h3>
-					<p>TODO
+					<p>Stash - буфер, в который можно временно отложить сообщения
+				</section>
+
+				<section>
+					<pre><code class="scala">
+def behavior: Behavior[Protocol] = Behaviors.setup { ctx ⇒
+  val buffer = StashBuffer[Protocol](capacity = 10000)
+
+  ...
+}
+
+					</code></pre>
+				</section>
+
+				<section>
+					<p>сохраняем в буфер
+					<pre><code class="scala">
+        case msg =&gt;
+          buffer.stash(msg)
+          Behaviors.same
+
+					</code></pre>
+				</section>
+
+				<section>
+					<p>возвращаем в mailbox:
+
+					<pre><code class="scala">
+          buffer.unstashAll(ctx, normalState(state))
+					</code></pre>
+
+					<p>оборачивает behavior normalState
 				</section>
 
 				<section>
 					<h3>Таймеры</h3>
-					<p>TODO
+					<p>API таймеров было портировано в обычную Akka
+					<ul>
+						<li class="fragment">При рестарте старые задания отменяются, сообщения игнорируются
+						<li class="fragment">При остановке отменяет задания
+					</ul>
+				</section>
+
+				<section>
+					<pre><code class="scala">
+def behaviour: Behavior[Protocol] = 
+  Behaviors.withTimers { timers ⇒
+    timers.startPeriodicTimer(
+      key = Recheck, 
+      msg = Recheck, 
+      interval = 5 minutes)
+
+    ....
+  }
+					</code></pre>
+				</section>
+
+				<section>
+					<p>На этом пока всё
+					<p><a href="https://maxcom.github.io/akka-typed-intro/">https://maxcom.github.io/akka-typed-intro/</a>
 				</section>
 		</div>
 
