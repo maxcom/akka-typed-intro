@@ -224,7 +224,70 @@ import akka.actor.typed.scaladsl.adapter._
 
 				<section>
 					<h3>ask-pattern</h3>
-					<p>TODO
+				</section>
+
+				<section>
+					<p>context.sender() больше нет, получателя явно передаем:
+
+					<pre><code class="scala">
+case class GetActiveHosts(replyTo: TypedActorRef[ActiveHosts]) 
+  extends Protocol
+
+  ...
+
+workstationsRepo ? GetActiveHosts // Future[ActiveHosts]
+					</code></pre>
+				</section>
+
+				<section>
+					<p>Как это работает?
+					<pre><code class="scala">
+// implicit параметры пропущены
+def ?[U](f: ActorRef[U] ⇒ T): Future[U]
+					</code></pre>
+				</section>
+
+				<section>
+				<p>Что если есть параметры?
+						<pre><code class="scala">
+GetHostIdentities(hostname: Hostname, 
+                  replyTo: ActorRef[HostIdentities]) 
+  extends Protocol
+  ...
+
+agentStatusRepo ? GetHostIdentities(h, _)
+
+// Error:(205, 82) missing parameter type for expanded 
+					</code></pre>
+				</section>
+
+				<section>
+					<p>Чтобы не указывать тип можно сделать два блока параметров:
+					<pre><code class="scala">
+GetHostIdentities(hostname: Hostname) 
+                 (replyTo: ActorRef[HostIdentities]) 
+  extends Protocol
+  ...
+
+agentStatusRepo ? GetHostIdentities(h)
+					</code></pre>
+					<p class="fragment">pattern matching не работает, equals/hashcode не учитывает reply
+				</section>
+
+				<section>
+					<p>Или так:
+					<pre><code class="scala">
+case class GetHostIdentities(hostname: Hostname, 
+                             replyTo: ActorRef[HostIdentities]) 
+  extends Protocol
+
+object GetHostIdentities {
+  def build(hostname: Hostname)
+           (replyTo: ActorRef[HostIdentities]) = 
+	     GetHostIdentities(hostname, replyTo)
+}
+					</code></pre>
+					<p class="fragment">много кода - плохо
 				</section>
 
 				<section>
